@@ -6,6 +6,9 @@ const timerElement = document.getElementById("timer");
 const userName = document.getElementById("userName");
 const userScore = document.getElementById("userScore");
 const clearScoreBtn = document.getElementById("clearScore");
+const scoreList = document.getElementById("scoreList");
+const initialsArray = JSON.parse(localStorage.getItem("User")) || [];
+const scoresArray = JSON.parse(localStorage.getItem("Score")) || [];
 const questions = [
   {
     title: "How many rings has Michael Jordan won?",
@@ -92,8 +95,11 @@ function startTimer() {
           `Congrats you know as much about the GOAT as I do! You scored ${timerCount} points!`
         );
         //local storage save high score
-        localStorage.setItem("User", userInitials);
-        localStorage.setItem("Score", timerCount);
+
+        initialsArray.push(userInitials);
+        scoresArray.push(timerCount);
+        localStorage.setItem("User", JSON.stringify(initialsArray));
+        localStorage.setItem("Score", JSON.stringify(scoresArray));
 
         clearInterval(timer);
         // winGame();
@@ -114,17 +120,17 @@ function startTimer() {
 }
 
 //save highscore
-let userInput = localStorage.getItem("User");
-let userPoints = localStorage.getItem("Score");
-document.getElementById("userName").innerHTML = userInput;
-document.getElementById("userScore").innerHTML = userPoints;
+for (let i = 0; i < initialsArray.length; i += 1) {
+  scoreList.innerHTML +=
+    "<p>" + initialsArray[i] + " " + scoresArray[i] + "</p>";
+}
+
+//clear highscore
 
 function clearScores() {
   localStorage.clear();
-  document.getElementById("userName").innerHTML = "";
-  document.getElementById("userScore").innerHTML = "";
+  location.reload();
 }
-//clear score
 
 // Initialization- start
 startBtn.addEventListener("click", startTimer);
